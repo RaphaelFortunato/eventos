@@ -7,7 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
+
 import conexao.SingleConnection;
+import model.BeanLocalEvento;
+import model.LocalEvento;
 import model.UserModel;
 
 public class UserDaoEventos {
@@ -137,6 +141,93 @@ public class UserDaoEventos {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	
+	//salvar local evento - tabela filha
+	public void salvarEvento(LocalEvento localEvento) {
+		
+		try {
+			
+			String sql = "INSERT INTO localevento(localeve, tipo, inscricao) VALUES ( ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, localEvento.getLocalevento());
+			preparedStatement.setString(2, localEvento.getTipo());
+			preparedStatement.setLong(3, localEvento.getInscricao());
+			
+			preparedStatement.execute();
+			connection.commit();
+			
+			
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		
+	}
+	
+	//consultando inner join
+	public List<BeanLocalEvento> listaLocalEventos (Long idEvento){
+		
+		List<BeanLocalEvento> beanLocalEventos = new ArrayList<BeanLocalEvento>();
+		
+		String sql = "select localeve, tipo, nome from localevento as loc";
+		sql += " inner join inscricao as insc ";
+		sql += " on loc.inscricao = insc.id ";
+		sql += " where insc.id = " + idEvento;
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(sql);
+			
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				BeanLocalEvento beanLocalEvento = new BeanLocalEvento();
+				beanLocalEvento.setLocal(resultSet.getString("localeve"));
+				beanLocalEvento.setTipo(resultSet.getString("tipo"));
+				beanLocalEvento.setNome(resultSet.getString("nome"));
+				
+				beanLocalEventos.add(beanLocalEvento);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return beanLocalEventos;
+		
+	}
+	
+	//deletando em cascata
+	public void deletandoEvento(Long idEvento) {
+		
+		String sqlLocEve = "delete from localevento where inscricao = " + idEvento;
+		String sqlInscricao = "delete from inscricao where id = " + idEvento;
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(sqlLocEve);
+			statement.executeUpdate();
+			connection.commit();
+			
+			statement = connection.prepareStatement(sqlInscricao);
+			statement.executeUpdate();
+			connection.commit();
+			
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 		
 	}
 	

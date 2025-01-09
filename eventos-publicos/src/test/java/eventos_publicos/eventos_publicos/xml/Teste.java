@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import conexao.SingleConnection;
 import dao.UserDaoEventos;
+import model.BeanLocalEvento;
+import model.LocalEvento;
 import model.UserModel;
 
 public class Teste {
@@ -96,6 +98,48 @@ public class Teste {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+	
+	@Test
+	public void inserindoEvento() {
+		
+		LocalEvento evento = new LocalEvento();
+		evento.setLocalevento("praia");
+		evento.setTipo("privado");
+		evento.setInscricao(10L);
+		
+		UserDaoEventos dao = new UserDaoEventos();
+		dao.salvarEvento(evento);
+		
+		
+		
+	}
+	
+	
+	@Test
+	public void testeEvento() {
+		
+		UserDaoEventos daoEventos = new UserDaoEventos();
+		
+		List<BeanLocalEvento> beanLocalEventos = daoEventos.listaLocalEventos(3L);
+		
+		for (BeanLocalEvento beanLocalEvento : beanLocalEventos) {
+			
+			System.out.println("Local evento: " + beanLocalEvento.getLocal());
+			System.out.println("Tipo evento: " + beanLocalEvento.getTipo());
+			System.out.println("Nome: " + beanLocalEvento.getNome());
+			System.out.println("---------------------------");
+			
+		}
+	}
+	
+	@Test
+	public void deleteEvento() {
+		
+		UserDaoEventos dao = new UserDaoEventos();
+		dao.deletandoEvento(7L);;
+		
 		
 	}
 	
