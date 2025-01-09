@@ -18,8 +18,8 @@ public class Teste {
 		UserDaoEventos userDaoEventos = new UserDaoEventos();
 		UserModel userModel = new UserModel();
 		
-		userModel.setNome("Laila");
-		userModel.setData("25/08/2019");
+		userModel.setNome("Fabio");
+		userModel.setData("15/10/2010");
 		
 		userDaoEventos.cadastro(userModel);
 		
@@ -57,6 +57,42 @@ public class Teste {
 		try {
 			UserModel model = daoEventos.buscaId(2L);
 			System.out.println(model.getNome());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void atualiza() {
+		
+		try {
+			
+			UserDaoEventos userDaoEventos = new UserDaoEventos();
+			UserModel consultaNoBanco = userDaoEventos.buscaId(2L);
+			
+			consultaNoBanco.setNome("Luana");
+			consultaNoBanco.setData("10/10/2010");
+			
+			userDaoEventos.atualizar(consultaNoBanco);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	@Test
+	public void deletar() {
+		
+		try {
+			
+			UserDaoEventos eventos = new UserDaoEventos();
+			eventos.deletando(2L);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

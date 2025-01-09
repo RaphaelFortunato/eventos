@@ -91,5 +91,54 @@ public class UserDaoEventos {
 		
 	}
 	
+	//atualizar
+	public void atualizar(UserModel userModel){
+	
+		String sql = "update inscricao set nome = ?, data = ? where id =" + userModel.getId();
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, userModel.getNome());
+			statement.setString(2, userModel.getData());
+			
+			statement.execute();
+			connection.commit();
+		
+		}catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+
+		
+	}
+	
+	
+	public void deletando(Long id) {
+		
+		String sql = "delete from inscricao where id = " + id;
+		
+		try {
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.execute();
+			
+			connection.commit();
+			
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 
 }
